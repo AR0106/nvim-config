@@ -27,3 +27,6 @@ vim.keymap.set("n", "<Leader>t", function()
 end, { remap = true })
 
 require("telescope").load_extension("find_template")
+
+local projTemplate = require("plugins.proj_templates")
+projTemplate.InitProjectTemplates()
