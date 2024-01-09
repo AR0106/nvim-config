@@ -21,3 +21,9 @@ dap.configurations.cs = {
     end,
   },
 }
+
+vim.keymap.set("n", "<Leader>t", function()
+  vim.fn.feedkeys(":Template ")
+end, { remap = true })
+
+require("telescope").load_extension("find_template")
