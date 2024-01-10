@@ -30,3 +30,6 @@ require("telescope").load_extension("find_template")
 
 local projTmp = require("proj_templates")
 projTmp.InitProjectTemplates()
+
+vim.wo.wrap = true
+vim.wo.relativenumber = false
