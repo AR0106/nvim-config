@@ -28,5 +28,5 @@ end, { remap = true })
 
 require("telescope").load_extension("find_template")
 
-local projTemplate = require("plugins.proj_templates")
-projTemplate.InitProjectTemplates()
+local projTmp = require("proj_templates")
+projTmp.InitProjectTemplates()
