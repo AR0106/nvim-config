@@ -3,7 +3,6 @@ require("config.lazy")
 vim.o.mouse = "a"
 
 local dap = require("dap")
-local project = require("project_nvim")
 
 dap.adapters.coreclr = {
   type = "executable",
@@ -28,8 +27,78 @@ end, { remap = true })
 
 require("telescope").load_extension("find_template")
 
-local projTmp = require("proj_templates")
-projTmp.InitProjectTemplates()
-
 vim.wo.wrap = true
-vim.wo.relativenumber = false
+
+require("onedark").setup({
+  style = "darker",
+})
+require("onedark").load()
+
+-- Ensure toggleterm.nvim is installed and set up
+require("toggleterm").setup({
+  size = 20,
+  open_mapping = [[<C-\>]],
+  hide_numbers = true,
+  shade_filetypes = {},
+  shade_terminals = true,
+  shading_factor = 2,
+  start_in_insert = true,
+  insert_mappings = true,
+  persist_size = true,
+  direction = "float",
+  close_on_exit = true,
+  float_opts = {
+    border = "curved",
+    winblend = 0,
+    highlights = {
+      border = "Normal",
+      background = "Normal",
+    },
+  },
+})
+
+-- Function to open LazyGit in a floating terminal
+local Terminal = require("toggleterm.terminal").Terminal
+
+-- Define lazygit as a global variable
+_G.lazygit = Terminal:new({
+  cmd = "lazygit",
+  dir = "git_dir",
+  direction = "float",
+  float_opts = {
+    border = "curved",
+  },
+  on_open = function(term)
+    vim.cmd("startinsert!")
+    -- Optional: close LazyGit with <q>
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  on_close = function(_)
+    vim.cmd("startinsert!")
+  end,
+})
+
+-- Define a general terminal popup
+_G.generic_terminal = Terminal:new({
+  cmd = nil, -- Defaults to your shell
+  direction = "float",
+  float_opts = {
+    border = "curved",
+  },
+  on_open = function(term)
+    vim.cmd("startinsert!")
+    -- Optional: close terminal with <q>
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  on_close = function(_)
+    vim.cmd("startinsert!")
+  end,
+})
+-- Keybinding to toggle LazyGit
+vim.api.nvim_set_keymap("n", "<leader>tg", "<cmd>lua _G.lazygit:toggle()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>tt",
+  "<cmd>lua _G.generic_terminal:toggle()<CR>",
+  { noremap = true, silent = true }
+)
